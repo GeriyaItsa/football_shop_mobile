@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:football_shop_mobile/widgets/left_drawer.dart';
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:football_shop_mobile/screens/menu.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
@@ -29,6 +33,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -197,49 +202,37 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       backgroundColor:
                           MaterialStateProperty.all(Colors.indigo),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Produk berhasil disimpan'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nama: $_name'),
-                                    Text('Harga: Rp ${_price.toStringAsFixed(2)}'),
-                                    Text('Deskripsi: $_description'),
-                                    Text('Kategori: $_category'),
-                                    Text('Thumbnail: $_thumbnail'),
-                                    Text('Unggulan: ${_isFeatured ? "Ya" : "Tidak"}'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    // Reset form
-                                    setState(() {
-                                      _formKey.currentState!.reset();
-                                      _name = "";
-                                      _price = 0.0;
-                                      _description = "";
-                                      _thumbnail = "";
-                                      _category = "baju";
-                                      _isFeatured = false;
-                                    });
-                                  },
-                                ),
-                              ],
-                            );
+                        // Jika form valid, lakukan POST ke server
+                        final response = await request.post(
+                          "http://localhost:8000/create-flutter/",
+                          {
+                            "name": _name,
+                            "price": _price.toString(),
+                            "description": _description,
+                            "thumbnail": _thumbnail,
+                            "category": _category,
+                            "is_featured": _isFeatured ? "true" : "false",
                           },
                         );
+
+                        if (response['status'] == 'success') {
+                          // Jika berhasil, kembali ke halaman sebelumnya
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        } else {
+                          // Jika gagal, tampilkan snackbar dengan pesan error
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Gagal menambahkan produk: ${response['message']}'),
+                            ),
+                          );
+                        }
                       }
-                    },
+                    }, 
                     child: const Text(
                       "Simpan",
                       style: TextStyle(color: Colors.white),

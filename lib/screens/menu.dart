@@ -11,11 +11,10 @@ class MyHomePage extends StatelessWidget {
   final String kelas = "F"; //kelas
 
   final List<ItemHomepage> items = [
-    ItemHomepage("All Products", Icons.newspaper),
-    ItemHomepage("My Products", Icons.newspaper),
-    ItemHomepage("Create Product", Icons.add),
+    ItemHomepage("Product List", Icons.newspaper),
+    ItemHomepage("Create Product", Icons.newspaper),
+    ItemHomepage("Logout", Icons.logout),
   ];
-
 
   @override
   Widget build(BuildContext context) {

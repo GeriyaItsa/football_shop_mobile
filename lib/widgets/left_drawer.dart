@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:football_shop_mobile/screens/menu.dart';
 // Impor halaman form yang akan dituju
 import 'package:football_shop_mobile/screens/productlist_form.dart';
+import 'package:football_shop_mobile/screens/product_entry_list.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -12,9 +13,7 @@ class LeftDrawer extends StatelessWidget {
       child: ListView(
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
+            decoration: BoxDecoration(color: Colors.blue),
             child: Column(
               children: [
                 Text(
@@ -28,7 +27,7 @@ class LeftDrawer extends StatelessWidget {
                 ),
                 Padding(padding: EdgeInsets.all(10)),
                 Text(
-                  "Seluruh berita sepak bola terkini di sini!",
+                  "Menampilkan berbagai produk sepak bola terbaik untuk Anda!",
                   // TODO: Tambahkan gaya teks dengan center alignment, font ukuran 15, warna putih, dan weight biasa
                   // JAWABAN: Menambahkan style pada Text widget
                   textAlign: TextAlign.center,
@@ -48,25 +47,20 @@ class LeftDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => MyHomePage(),
-                ),
+                MaterialPageRoute(builder: (context) => MyHomePage()),
               );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.post_add),
-            title: const Text('Add Product'),
-            // Bagian redirection ke ProductFormPage
+            leading: const Icon(Icons.add_reaction_rounded),
+            title: const Text('Product List'),
             onTap: () {
-              /*
-              TODO: Buatlah routing ke ProductFormPage di sini,
-              setelah halaman ProductFormPage sudah dibuat.
-              */
-              // JAWABAN: Navigasi ke ProductFormPage menggunakan Navigator.push
+              // Route to product list page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProductFormPage()),
+                MaterialPageRoute(
+                  builder: (context) => const ProductEntryListPage(),
+                ),
               );
             },
           ),
